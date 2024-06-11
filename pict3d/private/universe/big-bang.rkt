@@ -280,7 +280,7 @@ Universe/networking
                (syntax/loc stx (void)))]))
       
       (version-must-be-after-6.3
-       (collect-garbage 'incremental))
+       (if (= 0 (modulo frame 10)) (collect-garbage 'incremental) (void)))
       ;; Mark the start of the frame
       (define start (real->double-flonum (current-inexact-milliseconds)))
       (set! frame (+ frame 1))

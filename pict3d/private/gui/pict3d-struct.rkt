@@ -43,7 +43,8 @@
   #:property prop:custom-write
   (λ (p port mode) ((current-pict3d-custom-write) (pict3d-scene p) port mode))
   #:property prop:print-converter
-  (λ (p recur) ((current-pict3d-print-converter) (pict3d-scene p) recur)))
+  (λ (p recur) ((current-pict3d-print-converter) (pict3d-scene p) recur))
+  #:transparent)
 
 (define-type -Pict3D Pict3D)
 (define pict3d? Pict3D?)
