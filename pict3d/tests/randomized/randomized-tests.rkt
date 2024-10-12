@@ -4,6 +4,7 @@
          redex/reduction-semantics)
 
 (define num-tessellate-vs-orig-tests 100)
+(define num-tessellate-bbox-vs-orig-bbox-tests 100)
 (define num-ray-trace-vs-opengl-tests 100)
 
 (define-language simple-pict3d
@@ -34,24 +35,14 @@
                 #:inside? b)
           ])
 
-(printf "Randomized test: tessellated vs. original~n")
-(parameterize ([current-namespace  (make-gui-namespace)])
-  (eval '(require pict3d
-                  "check-tessellate-vs-orig.rkt"))
-  (for ([i  (in-range num-tessellate-vs-orig-tests)])
-    (when (zero? (modulo i 10))
-      (printf "i = ~v~n~n" i))
-    (define term (generate-term simple-pict3d scene 7))
-    (printf "Testing ~v~n~n" term)
-    (eval `(check-tessellate-vs-orig ,term))))
 
-(printf "Randomized test: ray-traced vs. OpenGL~n")
+(printf "Randomized test: tessellated bbox vs. original bbox~n")
 (parameterize ([current-namespace  (make-gui-namespace)])
   (eval '(require pict3d
-                  "check-ray-trace-vs-opengl.rkt"))
-  (for ([i  (in-range num-ray-trace-vs-opengl-tests)])
+                  "check-tessellate-bbox-vs-orig-bbox.rkt"))
+  (for ([i  (in-range num-tessellate-bbox-vs-orig-bbox-tests)])
     (when (zero? (modulo i 10))
       (printf "i = ~v~n~n" i))
     (define term (generate-term simple-pict3d scene 7))
     (printf "Testing ~v~n~n" term)
-    (eval `(check-ray-trace-vs-opengl ,term))))
+    (eval `(check-tessellate-bbox-vs-orig-bbox ,term))))

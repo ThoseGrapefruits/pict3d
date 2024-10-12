@@ -436,10 +436,12 @@ code
 
 (: get-disk-shape-bbox (-> shape FlAffine3 bbox))
 (define (get-disk-shape-bbox s t)
-  (let* ([s  (assert s disk-shape?)])
+  (let* ([s  (assert s disk-shape?)]
+         [a (disk-shape-max-angle s)]
+         [radius-inner (disk-shape-inner-radius s)])
     (define disk-t (flt3compose (disk-shape-affine s)
                                 (move-z-flt3 (disk-shape-z-offset s))))
-    (bbox (transformed-disk-flrect3 (flt3compose t disk-t))
+    (bbox (transformed-disk-flrect3 (flt3compose t disk-t) a radius-inner)
           0.0)))
 
 ;; ===================================================================================================

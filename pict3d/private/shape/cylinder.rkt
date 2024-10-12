@@ -73,6 +73,7 @@
 
 (: cylinder-wall-shape->vtxs (-> cylinder-wall-shape (Values vtx vtx vtx vtx)))
 (define (cylinder-wall-shape->vtxs s)
+  ; should pull some of the angle math from here to get-cylinder-shape-bbox?
   (match-define (cylinder-wall-shape _ _ t r11 r12 r21 r22 a c e m back? _) s)
   (define sa (sin a))
   (define ca (cos a))
@@ -532,8 +533,7 @@ Rectangle indexes
        (vector (shape-params cylinder-mat-program empty #f GL_TRIANGLES mat-verts))
        (vector (shape-params cylinder-opaq-program empty #f GL_TRIANGLES draw-verts))
        #()
-       #()))
-  )
+       #())))
 
 (: get-cylinder-wall-shape-passes (-> shape passes))
 (define (get-cylinder-wall-shape-passes s)
@@ -547,13 +547,16 @@ Rectangle indexes
 
 (: get-cylinder-shape-bbox (-> shape FlAffine3 bbox))
 (define (get-cylinder-shape-bbox s t)
-  (let ([s  (assert s cylinder-shape?)])
-    (let* ([t  (flt3compose t (cylinder-shape-affine s))]
-           [top-t  (flt3compose t top-t)]
-           [bot-t  (flt3compose t bot-t)])
-      (bbox (flrect3-join (transformed-disk-flrect3 top-t)
-                          (transformed-disk-flrect3 bot-t))
-            0.0))))
+  ; TODO need to see if we can use the angle to make the output disk more specific
+  (let* ([s     (assert s cylinder-shape?)]
+         [a     (cylinder-shape-max-angle s)]
+         [r     (cylinder-shape-top-radius s)]
+         [t     (flt3compose t (cylinder-shape-affine s))]
+         [top-t (flt3compose t top-t)]
+         [bot-t (flt3compose t bot-t)])
+    (bbox (flrect3-join (transformed-disk-flrect3 top-t a r)
+                        (transformed-disk-flrect3 bot-t a r))
+          0.0)))
 
 (: get-cylinder-wall-shape-bbox (-> shape FlAffine3 bbox))
 (define (get-cylinder-wall-shape-bbox s t)

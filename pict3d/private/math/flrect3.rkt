@@ -19,6 +19,9 @@
 
 (define-type Plane-Sides (U 'neg 'negzero 'zero 'poszero 'pos 'nonzero))
 
+(define 3pi/2 : Nonnegative-Flonum (* 3/2 pi))
+(define pi/2 : Nonnegative-Flonum (/ pi 2.0))
+
 ;; ===================================================================================================
 ;; Types
 
@@ -95,15 +98,39 @@
       (flrect3 (flv3 (- m03 dx) (- m13 dy) (- m23 dz))
                (flv3 (+ m03 dx) (+ m13 dy) (+ m23 dz))))))
 
-(: transformed-disk-flrect3 (-> FlAffine3 FlRect3))
-(define (transformed-disk-flrect3 t)
+(: transformed-disk-flrect3 (-> FlAffine3 Positive-Flonum Nonnegative-Flonum FlRect3))
+(define (transformed-disk-flrect3 t a radius-inner)
   (call/flaffine3-forward t
     (λ (m00 m01 _m02 m03 m10 m11 _m12 m13 m20 m21 _m22 m23)
       (define dx (fl3mag m00 m01 0.0))
       (define dy (fl3mag m10 m11 0.0))
       (define dz (fl3mag m20 m21 0.0))
-      (flrect3 (flv3 (- m03 dx) (- m13 dy) (- m23 dz))
-               (flv3 (+ m03 dx) (+ m13 dy) (+ m23 dz))))))
+      ; To get an exact bounding box, there are some special rules for each
+      ; direction depending on which quadrant of the unit circle we're in.
+
+      ; TODO this is still not quite right. It seems like these aren't being
+      ; "passed through" the transformation, so after the shape is rotated etc
+      ; it is inexact again. Might be able to learn from the flrect3 getter for
+      ; polygons, but it's possible this is also just a cursed problem given
+      ; that we're working w/ curved shapes and whatnot.
+      (define dx+ dx)
+      (define dx- (cond [(fl<= a pi/2)  (* (cos a) radius-inner)]
+                        [(fl>= a pi) -1.0]
+                        [else (* dx (cos a))]))
+      (define dy+ (cond [(fl>= a pi/2)  1.0]
+                        [else (* dy (sin a))]))
+      (define dy- (cond [(fl<= a pi) 0.0]
+                        [(fl>= a 3pi/2) -1.0]
+                        [else (* dy (sin a))]))
+      (define dz- (- dz))
+      (define dz+ dz)
+      (printf "____ ~s\tdx: ~s\tdy: ~s\tdz: ~s~n" a dx dy dz)
+      (flrect3 (flv3 (+ m03 dx-)
+                     (+ m13 dy-)
+                     (+ m23 dz-))
+               (flv3 (+ m03 dx+)
+                     (+ m13 dy+)
+                     (+ m23 dz+))))))
 
 (define-syntax-rule (call/flrect3-values bb-stx f)
   (let ([bb : FlRect3  bb-stx])

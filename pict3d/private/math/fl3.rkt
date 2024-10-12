@@ -71,7 +71,7 @@
   (let ([x : Flonum  x-stx]
         [y : Flonum  y-stx]
         [z : Flonum  z-stx])
-    (max 0.0 (+ (* x x) (* y y) (* z z)))))
+    (max 0.0 (fl+ (fl* x x) (fl* y y) (fl* z z)))))
 
 ;(: fl3mag (-> Flonum Flonum Flonum Nonnegative-Flonum))
 ;; Observed error bounded by 1.5 ulp

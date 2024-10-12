@@ -9,12 +9,10 @@
    (with-material (material #:ambient 0.01 #:diffuse 0.2 #:specular 0.79 #:roughness 0.2)
      (with-color (rgba "DeepSkyBlue")
        (with-emitted (emitted "DeepSkyBlue" 0.25)
-         (cube origin 0.9))))
-   (group (light origin (emitted "azure" 0.5)) 'light)))
+         (cube origin 0.9))))))
 
 (define face
   (combine
-   (group (light (pos 0 0 0.3)) 'light)
    (with-color (rgba "black")
      (with-emitted (emitted "azure" 2)
        (ellipsoid origin (dir 0.75 0.75 1/4))))))
@@ -29,8 +27,7 @@
   (combine
    (with-emitted (emitted "yellow" 0.75)
      (deform (tessellate (sphere origin 1/8) #:max-angle (/ 90 5))
-       (extend (dir 1/8 1/8 1/8))))
-   (group (light origin (emitted "yellow" #i1/4)) 'light)))
+       (extend (dir 1/8 1/8 1/8))))))
 
 (define unscaled-player
   (combine
@@ -49,13 +46,9 @@
          (dir-scale (dir dx dy dz) 0.8))]
        [(= n 2)
         (define p bar)
-        (move
-         (cond [(= dx 0)  (rotate-y p 90)]
-               [(= dy 0)  (rotate-x p 90)]
-               [else  p])
-         (dir dx dy dz))]
+        empty-pict3d]
        [else
-        (move corner (dir dx dy dz))]))))
+        empty-pict3d]))))
 
 (define-values (mn mx) (bounding-rectangle unscaled-player))
 (define player

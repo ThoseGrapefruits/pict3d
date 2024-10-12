@@ -23,8 +23,8 @@
              (when (log-level? l 'mode)
                (log-message l 'mode (format str-expr arg ...) (current-continuation-marks))))]))))
 
-(define-syntax log-pict3d-fatal   (make-define-log 'fatal #'pict3d-logger))
-(define-syntax log-pict3d-error   (make-define-log 'error #'pict3d-logger))
+(define-syntax log-pict3d-fatal   (make-define-log 'fatal   #'pict3d-logger))
+(define-syntax log-pict3d-error   (make-define-log 'error   #'pict3d-logger))
 (define-syntax log-pict3d-warning (make-define-log 'warning #'pict3d-logger))
-(define-syntax log-pict3d-info    (make-define-log 'info #'pict3d-logger))
-(define-syntax log-pict3d-debug   (make-define-log 'debug #'pict3d-logger))
+(define-syntax log-pict3d-info    (make-define-log 'info    #'pict3d-logger))
+(define-syntax log-pict3d-debug   (make-define-log 'debug   #'pict3d-logger))
