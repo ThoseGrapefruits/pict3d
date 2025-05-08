@@ -124,7 +124,6 @@
                         [else (* dy (sin a))]))
       (define dz- (- dz))
       (define dz+ dz)
-      (printf "____ ~s\tdx: ~s\tdy: ~s\tdz: ~s~n" a dx dy dz)
       (flrect3 (flv3 (+ m03 dx-)
                      (+ m13 dy-)
                      (+ m23 dz-))
