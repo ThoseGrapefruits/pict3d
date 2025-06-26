@@ -222,6 +222,7 @@ Universe/networking
   
   (send window show #t)
   (send canvas focus)
+  (send canvas set-async-updates? #t)
   
   ;; Give the GUI thread a chance to work through its event queue and show the window,
   ;; and wait until after the first paint

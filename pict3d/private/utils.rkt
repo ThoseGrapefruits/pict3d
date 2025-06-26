@@ -191,12 +191,12 @@
      (syntax/loc stx
        (let* ([bx  bx-stx]
               [val  (unbox bx)])
-         (cond [(eq? 'lazy val)  (define val (thnk))
-                                 (set-box! bx val)
-                                 val]
+         (cond [(eq? 'lazy val) (define val (thnk))
+                                (box-cas! bx 'lazy val)
+                                val]
                [else  val])))]))
 
-;(: if-lazy-box (All (A B) (-> (Lazy-Box A) (-> B) (-> A B) B)))
+;(: if-box-lazy? (All (A B) (-> (Lazy-Box A) (-> B) (-> A B) B)))
 (define-syntax (if-box-lazy? stx)
   (syntax-case stx ()
     [(_ bx-stx then-thnk else-proc)

@@ -11,7 +11,7 @@
 (define (check-flvector name vs)
   (for ([i : Nonnegative-Fixnum  (in-range (flvector-length vs))])
     (define v (unsafe-flvector-ref vs i))
-    (unless (< -inf.0 v +inf.0)
+    (unless (and (unsafe-fl< -inf.0 v) (unsafe-fl< v +inf.0))
       (error name "expected rationals; given ~e" vs)))
   vs)
 
